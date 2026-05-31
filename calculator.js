@@ -62,7 +62,7 @@ async function main() {
         console.log(formatNumber(first_number), '/', formatNumber(second_number), '=', formatNumber(divide(first_number, second_number)));
       }
     } else if (choice === 'n') {
-      console.log('Your are successfully logged out!');
+      console.log('Thank you for using the calculator. Goodbye!');
       rl.close();
       break;
     } else {
