@@ -20,6 +20,7 @@ export function multiply(first_number, second_number) {
 
 // Function divides two numbers
 export function divide(first_number, second_number) {
+  if (second_number === 0) throw new Error('Cannot divide by zero');
   return first_number / second_number;
 }
 

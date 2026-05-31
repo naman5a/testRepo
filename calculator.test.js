@@ -1,5 +1,5 @@
 import { describe, it } from 'node:test';
-import { strictEqual } from 'node:assert';
+import { strictEqual, throws } from 'node:assert';
 import { add, subtract, multiply, divide } from './calculator.js';
 
 describe('add', () => {
@@ -85,11 +85,11 @@ describe('divide', () => {
     strictEqual(divide(9, -3), -3);
   });
 
-  it('returns Infinity for division by zero', () => {
-    strictEqual(divide(10, 0), Infinity);
+  it('throws an error for division by zero', () => {
+    throws(() => divide(10, 0), { message: 'Cannot divide by zero' });
   });
 
-  it('returns -Infinity for negative division by zero', () => {
-    strictEqual(divide(-10, 0), -Infinity);
+  it('throws an error for negative division by zero', () => {
+    throws(() => divide(-10, 0), { message: 'Cannot divide by zero' });
   });
 });
