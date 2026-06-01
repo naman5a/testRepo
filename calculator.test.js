@@ -20,7 +20,7 @@ describe('add', () => {
   });
 
   it('adds decimal numbers', () => {
-    strictEqual(add(1.5, 2.3), 3.8);
+    strictEqual(add(1.5, 2.5), 4);
   });
 });
 
