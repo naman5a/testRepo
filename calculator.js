@@ -53,6 +53,11 @@ async function main() {
       const first_number = parseFloat(await askQuestion(rl, 'Enter first number: '));
       const second_number = parseFloat(await askQuestion(rl, 'Enter second number: '));
 
+      if (Number.isNaN(first_number) || Number.isNaN(second_number)) {
+        console.log('Error: Please enter valid numbers.');
+        continue;
+      }
+
       if (choice === '1') {
         console.log(formatNumber(first_number), '+', formatNumber(second_number), '=', formatNumber(add(first_number, second_number)));
       } else if (choice === '2') {
