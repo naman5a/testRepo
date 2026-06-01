@@ -45,11 +45,18 @@ async function main() {
   console.log('3. Multiply');
   console.log('4. Divide');
 
+  const operations = {
+    '1': { fn: add, symbol: '+' },
+    '2': { fn: subtract, symbol: '-' },
+    '3': { fn: multiply, symbol: '*' },
+    '4': { fn: divide, symbol: '/' },
+  };
+
   while (true) {
     // Take input from the console
     const choice = await askQuestion(rl, 'Enter choice(1/2/3/4 or n to cancel): ');
     // Check if choice is one of the five options
-    if (['1', '2', '3', '4'].includes(choice)) {
+    if (choice in operations) {
       const first_number = parseFloat(await askQuestion(rl, 'Enter first number: '));
       const second_number = parseFloat(await askQuestion(rl, 'Enter second number: '));
 
@@ -58,15 +65,8 @@ async function main() {
         continue;
       }
 
-      if (choice === '1') {
-        console.log(formatNumber(first_number), '+', formatNumber(second_number), '=', formatNumber(add(first_number, second_number)));
-      } else if (choice === '2') {
-        console.log(formatNumber(first_number), '-', formatNumber(second_number), '=', formatNumber(subtract(first_number, second_number)));
-      } else if (choice === '3') {
-        console.log(formatNumber(first_number), '*', formatNumber(second_number), '=', formatNumber(multiply(first_number, second_number)));
-      } else if (choice === '4') {
-        console.log(formatNumber(first_number), '/', formatNumber(second_number), '=', formatNumber(divide(first_number, second_number)));
-      }
+      const op = operations[choice];
+      console.log(formatNumber(first_number), op.symbol, formatNumber(second_number), '=', formatNumber(op.fn(first_number, second_number)));
     } else if (choice === 'n') {
       console.log('Thank you for using the calculator. Goodbye!');
       rl.close();
