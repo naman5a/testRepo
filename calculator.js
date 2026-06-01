@@ -36,6 +36,22 @@ function formatNumber(n) {
   return Number.isInteger(n) ? n.toFixed(1) : String(n);
 }
 
+const operations = {
+  '1': { fn: add, symbol: '+' },
+  '2': { fn: subtract, symbol: '-' },
+  '3': { fn: multiply, symbol: '*' },
+  '4': { fn: divide, symbol: '/' },
+};
+
+// Pure function: maps an operator choice to the correct arithmetic call and returns the result
+export function calculate(choice, a, b) {
+  if (!(choice in operations)) {
+    throw new Error(`Invalid choice: ${choice}`);
+  }
+  const op = operations[choice];
+  return { result: op.fn(a, b), symbol: op.symbol };
+}
+
 async function main() {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
@@ -44,13 +60,6 @@ async function main() {
   console.log('2. Subtract');
   console.log('3. Multiply');
   console.log('4. Divide');
-
-  const operations = {
-    '1': { fn: add, symbol: '+' },
-    '2': { fn: subtract, symbol: '-' },
-    '3': { fn: multiply, symbol: '*' },
-    '4': { fn: divide, symbol: '/' },
-  };
 
   while (true) {
     // Take input from the console
@@ -65,8 +74,8 @@ async function main() {
         continue;
       }
 
-      const op = operations[choice];
-      console.log(formatNumber(first_number), op.symbol, formatNumber(second_number), '=', formatNumber(op.fn(first_number, second_number)));
+      const { result, symbol } = calculate(choice, first_number, second_number);
+      console.log(formatNumber(first_number), symbol, formatNumber(second_number), '=', formatNumber(result));
     } else if (choice === 'n') {
       console.log('Thank you for using the calculator. Goodbye!');
       rl.close();
