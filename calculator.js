@@ -79,7 +79,8 @@ async function main() {
 
 // Only run the CLI loop when executed directly, not when imported by tests
 import { resolve } from 'node:path';
-const isMainModule = process.argv[1] && import.meta.url === 'file://' + resolve(process.argv[1]);
+import { fileURLToPath } from 'node:url';
+const isMainModule = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMainModule) {
   main();
 }
