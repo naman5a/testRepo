@@ -3,45 +3,49 @@
 # AGENTS.md
 
 ## Tech Stack
-- Runtime: Node.js 22 LTS
-- Language: Plain JavaScript (ES modules) — do NOT use TypeScript
-- Zero external dependencies — use only Node.js built-in modules
-- Console I/O: `node:readline`
-- Testing: `node:test` and `node:assert` (built-in)
-- `package.json` must set `"type": "module"` and contain only name, version, and entry point
-- Do NOT add any `node_modules`, `package-lock.json`, bundlers, transpilers, or compilers
+- Runtime: Node.js 20 LTS
+- Language: Vanilla JavaScript (no TypeScript)
+- Module system: CommonJS (`require`/`module.exports`)
+- Console input: Built-in `readline` module
+- No external dependencies — zero npm packages
+- No build step, no transpilation, no bundling
+- `package.json` is optional (no dependencies to manage)
+- Do NOT use ES modules (`import`/`export`)
+- Do NOT use TypeScript
+- Do NOT add any third-party libraries (e.g., `prompt-sync`, `inquirer`)
 
 ## Architecture
 - Single-file application: all code lives in `calculator.js`
-- Do NOT split into multiple modules or introduce layers
-- Define arithmetic functions (`add`, `subtract`, `multiply`, `divide`) as standalone exported functions at the top of the file
-- CLI input loop lives in the same file below the arithmetic functions
+- Procedural style — no classes, no dependency injection, no frameworks
+- Four arithmetic functions defined at top level: `add`, `subtract`, `multiply`, `divide`
+- Main interactive loop in the same file
 - Entry point: `node calculator.js`
-- No build step required
+- Do NOT split into multiple files or modules
+- Do NOT introduce design patterns beyond simple functions
 
-## Behavioral Requirements
-- Strict 1:1 behavioral parity with the original Python calculator
-- Output and input must be identical to the Python version
-- Do NOT add error handling, guards, or features beyond what the Python original has
-- Division by zero handling must match the Python behavior exactly
-- Do NOT enhance or "improve" the original behavior
+## Migration Rules
+- 1:1 faithful port of the Python calculator — same user interaction flow
+- Flow: menu display → operation choice → two number inputs → result display → loop until 'n' to exit
+- Console prompts, menu text, and result formatting must match the Python version as closely as possible
+- Python `input()` → Node.js `readline` equivalent
+- Do NOT add new features, improved error handling, or structural changes beyond what the language switch requires
+- Do NOT build a web UI — this is a CLI application
 
-## CLI Structure
-- Menu-driven interactive prompt using `node:readline`
-- Input validation with clear feedback on invalid menu choices
-- Graceful exit via cancel command
-- Cross-platform — do NOT use OS-specific code
+## Testability
+- Export arithmetic functions via `module.exports` for test access
+- Guard the main interactive loop behind `require.main === module` so it only runs when executed directly
+- This is the only structural addition beyond a pure 1:1 port
 
 ## Testing
-- Single test file: `calculator.test.js` alongside `calculator.js`
-- Unit tests only — cover `add`, `subtract`, `multiply`, `divide`
-- Export arithmetic functions from `calculator.js` so tests can import them
-- Run tests via: `node --test`
-- Do NOT test the CLI loop, input validation, or exit handling in automated tests
-- Do NOT add test configuration files or dev dependencies
-- Do NOT use any external test framework (Jest, Mocha, etc.)
+- Test runner: Node.js built-in `node:test` module
+- Assertions: `node:assert`
+- Test file: `calculator.test.js`
+- Run tests: `node --test`
+- Test all four functions: `add`, `subtract`, `multiply`, `divide`
+- Do NOT test the interactive CLI loop — verify that manually
+- Do NOT use external test frameworks (no Jest, Mocha, Vitest, etc.)
 
-## Code Style
-- Write readable, idiomatic JavaScript following standard JS conventions
-- Use `import`/`export` (ES module syntax) — do NOT use `require`/`module.exports`
-- No linting or formatting tools — keep style consistent manually
+## Non-Functional
+- Must produce identical arithmetic results and console output as the Python original for the same inputs
+- Must run on Node.js 20 LTS without errors
+- No performance, cross-platform, accessibility, i18n, or compliance requirements
