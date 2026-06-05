@@ -1,26 +1,25 @@
 // Program make a basic calculator
 // Author @inforkgodara
 
-import { createInterface } from 'node:readline';
+const readline = require('node:readline');
 
 // Function adds two numbers
-export function add(first_number, second_number) {
+function add(first_number, second_number) {
   return first_number + second_number;
 }
 
 // Function subtracts two numbers
-export function subtract(first_number, second_number) {
+function subtract(first_number, second_number) {
   return first_number - second_number;
 }
 
 // Function multiplies two numbers
-export function multiply(first_number, second_number) {
+function multiply(first_number, second_number) {
   return first_number * second_number;
 }
 
 // Function divides two numbers
-export function divide(first_number, second_number) {
-  if (second_number === 0) throw new Error('Cannot divide by zero');
+function divide(first_number, second_number) {
   return first_number / second_number;
 }
 
@@ -32,28 +31,8 @@ function askQuestion(rl, question) {
   });
 }
 
-function formatNumber(n) {
-  return Number.isInteger(n) ? n.toFixed(1) : String(n);
-}
-
-const operations = {
-  '1': { fn: add, symbol: '+' },
-  '2': { fn: subtract, symbol: '-' },
-  '3': { fn: multiply, symbol: '*' },
-  '4': { fn: divide, symbol: '/' },
-};
-
-// Pure function: maps an operator choice to the correct arithmetic call and returns the result
-export function calculate(choice, a, b) {
-  if (!(choice in operations)) {
-    throw new Error(`Invalid choice: ${choice}`);
-  }
-  const op = operations[choice];
-  return { result: op.fn(a, b), symbol: op.symbol };
-}
-
 async function main() {
-  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
   console.log('Select options.');
   console.log('1. Add');
@@ -65,19 +44,21 @@ async function main() {
     // Take input from the console
     const choice = await askQuestion(rl, 'Enter choice(1/2/3/4 or n to cancel): ');
     // Check if choice is one of the five options
-    if (choice in operations) {
+    if (choice === '1' || choice === '2' || choice === '3' || choice === '4') {
       const first_number = parseFloat(await askQuestion(rl, 'Enter first number: '));
       const second_number = parseFloat(await askQuestion(rl, 'Enter second number: '));
 
-      if (Number.isNaN(first_number) || Number.isNaN(second_number)) {
-        console.log('Error: Please enter valid numbers.');
-        continue;
+      if (choice === '1') {
+        console.log(first_number, '+', second_number, '=', add(first_number, second_number));
+      } else if (choice === '2') {
+        console.log(first_number, '-', second_number, '=', subtract(first_number, second_number));
+      } else if (choice === '3') {
+        console.log(first_number, '*', second_number, '=', multiply(first_number, second_number));
+      } else if (choice === '4') {
+        console.log(first_number, '/', second_number, '=', divide(first_number, second_number));
       }
-
-      const { result, symbol } = calculate(choice, first_number, second_number);
-      console.log(formatNumber(first_number), symbol, formatNumber(second_number), '=', formatNumber(result));
     } else if (choice === 'n') {
-      console.log('Thank you for using the calculator. Goodbye!');
+      console.log('Your are successfully logged out!');
       rl.close();
       break;
     } else {
@@ -86,10 +67,8 @@ async function main() {
   }
 }
 
-// Only run the CLI loop when executed directly, not when imported by tests
-import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-const isMainModule = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (isMainModule) {
+if (require.main === module) {
   main();
 }
+
+module.exports = { add, subtract, multiply, divide };
